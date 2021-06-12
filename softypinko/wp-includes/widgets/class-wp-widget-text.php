@@ -325,9 +325,9 @@ class WP_Widget_Text extends WP_Widget {
 		}
 
 		echo $args['before_widget'];
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
-		}
+		/* if ( ! empty( $title ) ) {
+		 	echo $args['before_title'] . $title . $args['after_title'];
+		} */
 
 		$text = preg_replace_callback( '#<(video|iframe|object|embed)\s[^>]*>#i', array( $this, 'inject_video_max_width_style' ), $text );
 
@@ -335,7 +335,9 @@ class WP_Widget_Text extends WP_Widget {
 		$text = wp_targeted_link_rel( $text );
 
 		?>
-			<div class="textwidget"><?php echo $text; ?></div>
+			<div class="row">
+                <div class="col-lg-12 copyright"><?php echo $text; ?></div>
+			</div>
 		<?php
 		echo $args['after_widget'];
 	}
