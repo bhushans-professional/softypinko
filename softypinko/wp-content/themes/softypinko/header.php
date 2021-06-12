@@ -43,27 +43,28 @@
     </div>  
     <!-- ***** Preloader End ***** -->
 
-	 <!-- ***** Header Area Start ***** -->
-	 <header class="header-area header-sticky">
+	<!-- ***** Header Area Start ***** -->
+	<header class="header-area header-sticky">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="#" class="logo">
-                            <img src="<?php echo ASSETS_URL; ?>/images/logo.png" alt="Softy Pinko"/>
+                        
+                        <a href="http://localhost/softypinko/" class="logo">
+                            <div class="site-logo"><?php the_custom_logo(); ?></div>
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
-                        <ul class="nav">
-                            <li><a href="#welcome" class="active">Home</a></li>
-                            <li><a href="#features">About</a></li>
-                            <li><a href="#work-process">Work Process</a></li>
-                            <li><a href="#testimonials">Testimonials</a></li>
-                            <li><a href="#pricing-plans">Pricing Tables</a></li>
-                            <li><a href="#blog">Blog Entries</a></li>
-                            <li><a href="#contact-us">Contact Us</a></li>
-                        </ul>
+                        <?php
+                            wp_nav_menu(
+                                array(
+                                    'theme_location'  => 'primary',
+                                    'items_wrap'      => '<ul id="primary-menu-list" class="nav">%3$s</ul>',
+                                    'fallback_cb'     => false,
+                                )
+                            );
+                        ?>
                         <a class='menu-trigger'>
                             <span>Menu</span>
                         </a>
