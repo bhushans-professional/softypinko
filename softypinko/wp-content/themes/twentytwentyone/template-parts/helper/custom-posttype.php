@@ -106,8 +106,8 @@ function custom_card_details() {
     $args = array( 
         'labels' => $labels,
         'hierarchical' => false,
-        'supports' => array( 'title'),
-        'taxonomies' => array( 'section_type' ),
+        'supports' => array( 'title', 'thumbnail'),
+        'taxonomies' => array( 'section_type'),
         'public' => true,
         'show_ui' => true,
         'show_in_menu' => true,
@@ -154,13 +154,25 @@ $custom_card_info_fields = array(
         'id'    => $prefix.'price',
         'type'  => 'text'
     ),
-	 array(
-        'label'=> 'Button Title',
+    array(
+        'label'=> 'Price Period',
+        'desc'  => '',
+        'id'    => $prefix.'price_period',
+        'type'  => 'text'
+    ),
+	array(
+        'label'=> 'Link/Button Title',
         'desc'  => '',
         'id'    => $prefix.'button_title',
         'type'  => 'text'
-	 ),
-	 array(
+	),
+    array(
+        'label'=> 'Link/Button URL',
+        'desc'  => '',
+        'id'    => $prefix.'button_url',
+        'type'  => 'text'
+	),
+	array(
         'label'=> 'Description',
         'desc'  => '',
         'id'    => $prefix.'description',
@@ -294,5 +306,119 @@ function xxxx_update_post($post_id, $post) {
     return;
 }
 add_action('save_post','xxxx_update_post',1,2);
+
+
+
+// Custom Post Type - Blog Details
+add_action( 'init', 'custom_blog_details' );
+function custom_blog_details() {
+
+    $labels = array( 
+        'name' => _x( 'Blogs', 'blog' ),
+        'singular_name' => _x( 'Blog', 'blog' ),
+        'add_new' => _x( 'Add New', 'blog' ),
+        'add_new_item' => _x( 'Add New Blog', 'blog' ),
+        'edit_item' => _x( 'Edit Blog', 'blog' ),
+        'new_item' => _x( 'New Blog', 'blog' ),
+        'view_item' => _x( 'View Blog', 'blog' ),
+        'search_items' => _x( 'Search Blog', 'blog' ),
+        'not_found' => _x( 'No Blog found', 'blog' ),
+        'not_found_in_trash' => _x( 'No Blog found in Trash', 'blog' ),
+        'parent_item_colon' => _x( 'Parent Card:', 'blog' ),
+        'menu_name' => _x( 'Blogs', 'blog' ),
+    );
+
+    $args = array( 
+        'labels' => $labels,
+        'hierarchical' => false,
+        'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt'),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 5,
+        'show_in_nav_menus' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => false,
+        'has_archive' => false,
+        'query_var' => true,
+        'can_export' => true,
+		'show_in_rest' => true,
+        'rewrite' => array( 'slug' => 'blog', 'hierarchical' => false, 'with_front' => false, 'feeds' => true, 'pages' => true ),
+        'capability_type' => 'page'
+    );
+	//flush_rewrite_rules();
+    register_post_type( 'blog', $args );
+}
+
+
+/** Custom Fields for Card Details **/
+$prefix = 'custom_blog_';
+$custom_blog_info_fields = array(
+	array(
+        'label'=> 'Link/Button Title',
+        'desc'  => '',
+        'id'    => $prefix.'button_title',
+        'type'  => 'text'
+	),
+    array(
+        'label'=> 'Link/Button URL',
+        'desc'  => '',
+        'id'    => $prefix.'button_url',
+        'type'  => 'text'
+	)
+);
+
+
+function blog_detail_box($post) {
+
+	global $custom_blog_info_fields, $post;
+	echo '<input type="hidden" name="custom_blog_info_box_nonce" value="'.wp_create_nonce(basename(__FILE__)).'" />';
+	echo '<table class="form-table">';
+	foreach ($custom_blog_info_fields as $field) {
+		$meta = get_post_meta($post->ID, $field['id'], true);
+		echo '<tr><th><label for="'.$field['id'].'">'.$field['label'].'</label></th><td>';
+		switch($field['type']) {
+			case 'text':
+				echo '<input type="text" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="30" /><br /><span class="description">'.$field['desc'].'</span>';
+				break;
+			case 'textarea_editor':
+				wp_editor( $meta, $field['id'] );
+				echo "<br><br>";
+				break;
+		}
+		echo '</td></tr>';
+	}
+    echo '</table>';
+
+}
+
+
+
+function save_blog_info_meta($post_id) {
+	global $custom_blog_info_fields;
+	if (!wp_verify_nonce($_POST['custom_blog_info_box_nonce'], basename(__FILE__))) return $post_id;
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return $post_id;
+	if ('page' == $_POST['post_type']) {
+		if (!current_user_can('edit_page', $post_id)) return $post_id;
+	} elseif (!current_user_can('edit_post', $post_id)) {
+		return $post_id;
+	}
+	foreach ($custom_blog_info_fields as $field) {
+		$old = get_post_meta($post_id, $field['id'], true);
+		$new = $_POST[$field['id']];
+		if ($new && $new != $old) {
+			update_post_meta($post_id, $field['id'], $new);
+		} elseif ('' == $new && $old) {
+			delete_post_meta($post_id, $field['id'], $old);
+		}
+	}
+}
+add_action('save_post', 'save_blog_info_meta');
+
+
+function blog_setup_meta_boxes() {
+    add_meta_box('blog_box', 'Blog Details', 'blog_detail_box', 'blog', 'normal', 'high');
+}
+add_action('admin_init','blog_setup_meta_boxes');
 
 ?>

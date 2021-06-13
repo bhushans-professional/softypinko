@@ -43,16 +43,19 @@
     </div>  
     <!-- ***** Preloader End ***** -->
 
-	<!-- ***** Header Area Start ***** -->
-	<header class="header-area header-sticky">
+	 <!-- ***** Header Area Start ***** -->
+	 <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        
+                        <?php
+                        $logo = get_theme_mod( 'custom_logo' );
+                        $image = wp_get_attachment_image_src( $logo , 'full' );
+                        ?>
                         <a href="http://localhost/softypinko/" class="logo">
-                            <div class="site-logo"><?php the_custom_logo(); ?></div>
+                                <div class="site-logo"><span class="custom-logo-link"><img width="160" height="30" src="<?php echo  $image[0];?>" class="custom-logo" alt=""></span></div>
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
