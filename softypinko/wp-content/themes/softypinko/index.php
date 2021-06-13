@@ -28,10 +28,17 @@ get_header();
             <div class="container">
                 <div class="row">
                     <div class="offset-xl-3 col-xl-6 offset-lg-2 col-lg-8 col-md-12 col-sm-12">
-                        <h1>We provide the best <strong>strategy</strong><br>to grow up your <strong>business</strong></h1>
-                        <p>Softy Pinko is a professional Bootstrap 4.0 theme designed by Template Mo 
-                        for your company at absolutely free of charge</p>
-                        <a href="#features" class="main-button-slider">Discover More</a>
+                        <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "home-section")) );
+                            $loop = new WP_Query( $args );
+                            global $post;
+                            while ( $loop->have_posts() ) : $loop->the_post();
+                            $meta = get_post_meta($post->ID);
+                        ?>
+                            <?php echo $post->post_content;?> 
+                        <?php
+                            endwhile;
+                        ?>
+                        <a href="#features" class="main-button-slider"><?php echo $meta['homepage-button-text'][0]; ?></a>
                     </div>
                 </div>
             </div>
@@ -47,39 +54,29 @@ get_header();
                 <div class="col-lg-12">
                     <div class="row">
                         <!-- ***** Features Small Item Start ***** -->
+                        <?php $args = array('post_type' => 'card', 'posts_per_page' => 10, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "home-section")) );
+                            $loop = new WP_Query( $args );
+                            global $post;
+                            while ( $loop->have_posts() ) : $loop->the_post();
+                            $meta = get_post_meta($post->ID);
+                            $existing_image_id = get_post_meta($post->ID,'_xxxx_attached_image', true);
+                            if(is_numeric($existing_image_id)) {
+                                    $arr_existing_image = wp_get_attachment_image_src($existing_image_id, 'large');
+                                    $existing_image_url = $arr_existing_image[0];
+                            }
+                        ?>
                         <div class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.2s">
                             <div class="features-small-item">
                                 <div class="icon">
-                                    <i><img src="<?php echo ASSETS_URL; ?>/images/featured-item-01.png" alt=""></i>
+                                    <i><img src="<?php echo $existing_image_url; ?>" alt="" width="50" height="50"></i>
                                 </div>
-                                <h5 class="features-title">Modern Strategy</h5>
-                                <p>Customize anything in this template to fit your website needs</p>
+                                <h5 class="features-title"><?php echo $meta['custom_card_title'][0]; ?></h5>
+                                <p><?php echo $meta['custom_card_description'][0]; ?></p>
                             </div>
                         </div>
-                        <!-- ***** Features Small Item End ***** -->
-
-                        <!-- ***** Features Small Item Start ***** -->
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.4s">
-                            <div class="features-small-item">
-                                <div class="icon">
-                                    <i><img src="<?php echo ASSETS_URL; ?>/images/featured-item-01.png" alt=""></i>
-                                </div>
-                                <h5 class="features-title">Best Relationship</h5>
-                                <p>Contact us immediately if you have a question in mind</p>
-                            </div>
-                        </div>
-                        <!-- ***** Features Small Item End ***** -->
-
-                        <!-- ***** Features Small Item Start ***** -->
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.6s">
-                            <div class="features-small-item">
-                                <div class="icon">
-                                    <i><img src="<?php echo ASSETS_URL; ?>/images/featured-item-01.png" alt=""></i>
-                                </div>
-                                <h5 class="features-title">Ultimate Marketing</h5>
-                                <p>You just need to tell your friends about our free templates</p>
-                            </div>
-                        </div>
+                        <?php
+                            endwhile;
+                        ?>
                         <!-- ***** Features Small Item End ***** -->
                     </div>
                 </div>
@@ -89,109 +86,110 @@ get_header();
     <!-- ***** Features Small End ***** -->
 
     <!-- ***** Features Big Item Start ***** -->
-    <section class="section padding-top-70 padding-bottom-0" id="features">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-md-12 col-sm-12 align-self-center" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <img src="<?php echo ASSETS_URL; ?>/images/left-image.png" class="rounded img-fluid d-block mx-auto" alt="App">
-                </div>
-                <div class="col-lg-1"></div>
-                <div class="col-lg-6 col-md-12 col-sm-12 align-self-center mobile-top-fix">
-                    <div class="left-heading">
-                        <h2 class="section-title">Let’s discuss about you project</h2>
+    <?php $args = array('post_type' => 'card', 'posts_per_page' => 5, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "about-section")) );
+        $loop = new WP_Query( $args );
+        global $post;
+        $flag = "odd";
+        while ( $loop->have_posts() ) : $loop->the_post();
+        $meta = get_post_meta($post->ID);
+        $existing_image_id = get_post_meta($post->ID,'_xxxx_attached_image', true);
+        if(is_numeric($existing_image_id)) {
+            $arr_existing_image = wp_get_attachment_image_src($existing_image_id, 'large');
+            $existing_image_url = $arr_existing_image[0];
+        }
+    ?>
+    <?php if($flag == "odd"){ $flag = "even"; ?>
+        <section class="section padding-top-70 padding-bottom-0" id="features">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5 col-md-12 col-sm-12 align-self-center" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                        <img src="<?php echo $existing_image_url; ?>" class="rounded img-fluid d-block mx-auto" alt="App">
                     </div>
-                    <div class="left-text">
-                        <p>Nullam sit amet purus libero. Etiam ullamcorper nisl ut augue blandit, at finibus leo efficitur. Nam gravida purus non sapien auctor, ut aliquam magna ullamcorper.</p>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 align-self-center mobile-top-fix">
+                        <div class="left-heading">
+                            <h2 class="section-title"><?php echo $meta['custom_card_title'][0]; ?></h2>
+                        </div>
+                        <div class="left-text">
+                            <p><?php echo $meta['custom_card_description'][0]; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="hr"></div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="hr"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ***** Features Big Item End ***** -->
-
-    <!-- ***** Features Big Item Start ***** -->
-    <section class="section padding-bottom-100">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-sm-12 align-self-center mobile-bottom-fix">
-                    <div class="left-heading">
-                        <h2 class="section-title">We can help you to grow your business</h2>
+        </section>
+    <?php }else{ $flag = "odd"; ?>
+        <section class="section padding-bottom-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12 align-self-center mobile-bottom-fix">
+                        <div class="left-heading">
+                            <h2 class="section-title"><?php echo $meta['custom_card_title'][0]; ?></h2>
+                        </div>
+                        <div class="left-text">
+                            <p><?php echo $meta['custom_card_description'][0]; ?></p>
+                        </div>
                     </div>
-                    <div class="left-text">
-                        <p>Aenean pretium, ipsum et porttitor auctor, metus ipsum iaculis nisi, a bibendum lectus libero vitae urna. Sed id leo eu dolor luctus congue sed eget ipsum. Nunc nec luctus libero. Etiam quis dolor elit.</p>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 align-self-center mobile-bottom-fix-big" data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
+                        <img src="<?php echo $existing_image_url; ?>" class="rounded img-fluid d-block mx-auto" alt="App">
                     </div>
                 </div>
-                <div class="col-lg-1"></div>
-                <div class="col-lg-5 col-md-12 col-sm-12 align-self-center mobile-bottom-fix-big" data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                    <img src="<?php echo ASSETS_URL; ?>/images/right-image.png" class="rounded img-fluid d-block mx-auto" alt="App">
-                </div>
             </div>
-        </div>
-    </section>
-    <!-- ***** Features Big Item End ***** -->
+        </section>
+    <?php } ?>
+    <?php
+        endwhile;
+    ?>
 
     <!-- ***** Home Parallax Start ***** -->
     <section class="mini" id="work-process">
         <div class="mini-content">
             <div class="container">
-                <div class="row">
+                <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "work-process-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                ?>
+                <div class="row" style="margin-bottom: 40px;">
                     <div class="offset-lg-3 col-lg-6">
                         <div class="info">
-                            <h1>Work Process</h1>
-                            <p>Aenean nec tempor metus. Maecenas ligula dolor, commodo in imperdiet interdum, vehicula ut ex. Donec ante diam.</p>
+                            <?php echo $post->post_content; ?> 
                         </div>
                     </div>
                 </div>
-
+                <?php
+                    endwhile;
+                ?>
+                
                 <!-- ***** Mini Box Start ***** -->
+                
                 <div class="row">
-                    <div class="col-lg-2 col-md-3 col-sm-6 col-6">
+                    <?php $args = array('post_type' => 'card', 'posts_per_page' => 10, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "work-process-section")) );
+                        $loop = new WP_Query( $args );
+                        global $post;
+                        while ( $loop->have_posts() ) : $loop->the_post();
+                        $meta = get_post_meta($post->ID);
+                        $existing_image_id = get_post_meta($post->ID,'_xxxx_attached_image', true);
+                        if(is_numeric($existing_image_id)) {
+                                $arr_existing_image = wp_get_attachment_image_src($existing_image_id, 'large');
+                                $existing_image_url = $arr_existing_image[0];
+                        }
+                    ?>
+                    <div class="col-lg-2 col-md-3 col-sm-6 col-6" style="margin: auto;">
                         <a href="#" class="mini-box">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/work-process-item-01.png" alt=""></i>
-                            <strong>Get Ideas</strong>
-                            <span>Godard pabst prism fam cliche.</span>
+                            <i><img src="<?php echo $existing_image_url; ?>" alt=""></i>
+                            <strong><?php echo $meta['custom_card_title'][0]; ?></strong>
+                            <span><?php echo $meta['custom_card_description'][0]; ?></span>
                         </a>
                     </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-                        <a href="#" class="mini-box">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/work-process-item-01.png" alt=""></i>
-                            <strong>Sketch Up</strong>
-                            <span>Godard pabst prism fam cliche.</span>
-                        </a>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-                        <a href="#" class="mini-box">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/work-process-item-01.png" alt=""></i>
-                            <strong>Discuss</strong>
-                            <span>Godard pabst prism fam cliche.</span>
-                        </a>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-                        <a href="#" class="mini-box">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/work-process-item-01.png" alt=""></i>
-                            <strong>Revise</strong>
-                            <span>Godard pabst prism fam cliche.</span>
-                        </a>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-                        <a href="#" class="mini-box">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/work-process-item-01.png" alt=""></i>
-                            <strong>Approve</strong>
-                            <span>Godard pabst prism fam cliche.</span>
-                        </a>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-                        <a href="#" class="mini-box">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/work-process-item-01.png" alt=""></i>
-                            <strong>Launch</strong>
-                            <span>Godard pabst prism fam cliche.</span>
-                        </a>
-                    </div>
+                    <?php
+                        endwhile;
+                    ?>
                 </div>
                 <!-- ***** Mini Box End ***** -->
             </div>
@@ -204,72 +202,55 @@ get_header();
         <div class="container">
             <!-- ***** Section Title Start ***** -->
             <div class="row">
+                <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "testimonials-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                ?>
+               
                 <div class="col-lg-12">
                     <div class="center-heading">
-                        <h2 class="section-title">What do they say?</h2>
+                        <?php echo $post->post_content; ?> 
                     </div>
                 </div>
-                <div class="offset-lg-3 col-lg-6">
-                    <div class="center-text">
-                        <p>Donec tempus, sem non rutrum imperdiet, lectus orci fringilla nulla, at accumsan elit eros a turpis. Ut sagittis lectus libero.</p>
-                    </div>
-                </div>
+               
+                <?php
+                    endwhile;
+                ?>
             </div>
             <!-- ***** Section Title End ***** -->
 
             <div class="row">
                 <!-- ***** Testimonials Item Start ***** -->
+                <?php $args = array('post_type' => 'card', 'posts_per_page' => 10, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "testimonials-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                    $meta = get_post_meta($post->ID);
+                    $existing_image_id = get_post_meta($post->ID,'_xxxx_attached_image', true);
+                    if(is_numeric($existing_image_id)) {
+                            $arr_existing_image = wp_get_attachment_image_src($existing_image_id, 'large');
+                            $existing_image_url = $arr_existing_image[0];
+                    }
+                ?>
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="team-item">
                         <div class="team-content">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/testimonial-icon.png" alt=""></i>
-                            <p>Proin a neque nisi. Nam ipsum nisi, venenatis ut nulla quis, egestas scelerisque orci. Maecenas a finibus odio.</p>
+                            <i><img src="<?php echo $existing_image_url; ?>" alt=""></i>
+                            <p><?php echo $meta['custom_card_description'][0]; ?></p>
                             <div class="user-image">
-                                <img src="http://placehold.it/60x60" alt="">
+                                <img src="<?php the_post_thumbnail(); ?>" width="60" height="60" alt="">
                             </div>
                             <div class="team-info">
-                                <h3 class="user-name">Catherine Soft</h3>
-                                <span>Managing Director</span>
+                                <h3 class="user-name"><?php echo $meta['custom_card_title'][0]; ?></h3>
+                                <span><?php echo $meta['custom_card_button_title'][0]; ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- ***** Testimonials Item End ***** -->
-                
-                <!-- ***** Testimonials Item Start ***** -->
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="team-item">
-                        <div class="team-content">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/testimonial-icon.png" alt=""></i>
-                            <p>Integer molestie aliquam gravida. Nullam nec arcu finibus, imperdiet nulla vitae, placerat nibh. Cras maximus venenatis molestie.</p>
-                            <div class="user-image">
-                                <img src="http://placehold.it/60x60" alt="">
-                            </div>
-                            <div class="team-info">
-                                <h3 class="user-name">Kelvin Wood</h3>
-                                <span>Digital Marketer</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ***** Testimonials Item End ***** -->
-                
-                <!-- ***** Testimonials Item Start ***** -->
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="team-item">
-                        <div class="team-content">
-                            <i><img src="<?php echo ASSETS_URL; ?>/images/testimonial-icon.png" alt=""></i>
-                            <p>Quisque diam odio, maximus ac consectetur eu, auctor non lorem. Cras quis est non ante ultrices molestie. Ut vehicula et diam at aliquam.</p>
-                            <div class="user-image">
-                                <img src="http://placehold.it/60x60" alt="">
-                            </div>
-                            <div class="team-info">
-                                <h3 class="user-name">David Martin</h3>
-                                <span>Website Manager</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    endwhile;
+                ?>
                 <!-- ***** Testimonials Item End ***** -->
             </div>
         </div>
@@ -281,102 +262,55 @@ get_header();
         <div class="container">
             <!-- ***** Section Title Start ***** -->
             <div class="row">
+                <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "pricing-tables-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                ?>
                 <div class="col-lg-12">
                     <div class="center-heading">
-                        <h2 class="section-title">Pricing Plans</h2>
+                        <?php echo $post->post_content; ?> 
                     </div>
                 </div>
-                <div class="offset-lg-3 col-lg-6">
-                    <div class="center-text">
-                        <p>Donec vulputate urna sed rutrum venenatis. Cras consequat magna quis arcu elementum, quis congue risus volutpat.</p>
-                    </div>
-                </div>
+                <?php
+                    endwhile;
+                ?>
             </div>
             <!-- ***** Section Title End ***** -->
 
             <div class="row">
                 <!-- ***** Pricing Item Start ***** -->
+                <?php $args = array('post_type' => 'card', 'posts_per_page' => 10, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "pricing-tables-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                    $meta = get_post_meta($post->ID);
+                    $existing_image_id = get_post_meta($post->ID,'_xxxx_attached_image', true);
+                    if(is_numeric($existing_image_id)) {
+                            $arr_existing_image = wp_get_attachment_image_src($existing_image_id, 'large');
+                            $existing_image_url = $arr_existing_image[0];
+                    }
+                ?>
                 <div class="col-lg-4 col-md-6 col-sm-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.2s">
                     <div class="pricing-item">
                         <div class="pricing-header">
-                            <h3 class="pricing-title">Starter</h3>
+                            <h3 class="pricing-title"><?php echo $meta['custom_card_title'][0]; ?></h3>
                         </div>
                         <div class="pricing-body">
                             <div class="price-wrapper">
-                                <span class="currency">$</span>
-                                <span class="price">14.50</span>
+                                <span class="price"><?php echo $meta['custom_card_price'][0]; ?></span>
                                 <span class="period">monthly</span>
                             </div>
-                            <ul class="list">
-                                <li class="active">60 GB space</li>
-                                <li class="active">600 GB transfer</li>
-                                <li class="active">Pro Design Panel</li>
-                                <li>15-minute support</li>
-                                <li>Unlimited Emails</li>
-                                <li>24/7 Security</li>
-                            </ul>
+                            <?php echo $meta['custom_card_description'][0]; ?>
                         </div>
                         <div class="pricing-footer">
-                            <a href="#" class="main-button">Purchase Now</a>
+                            <a href="<?php echo $meta['custom_card_button_url'][0]; ?>" class="main-button"><?php echo $meta['custom_card_button_title'][0]; ?></a>
                         </div>
                     </div>
                 </div>
-                <!-- ***** Pricing Item End ***** -->
-
-                <!-- ***** Pricing Item Start ***** -->
-                <div class="col-lg-4 col-md-6 col-sm-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.4s">
-                    <div class="pricing-item active">
-                        <div class="pricing-header">
-                            <h3 class="pricing-title">Premium</h3>
-                        </div>
-                        <div class="pricing-body">
-                            <div class="price-wrapper">
-                                <span class="currency">$</span>
-                                <span class="price">21.50</span>
-                                <span class="period">monthly</span>
-                            </div>
-                            <ul class="list">
-                                <li class="active">120 GB space</li>
-                                <li class="active">1200 GB transfer</li>
-                                <li class="active">Pro Design Panel</li>
-                                <li class="active">15-minute support</li>
-                                <li>Unlimited Emails</li>
-                                <li>24/7 Security</li>
-                            </ul>
-                        </div>
-                        <div class="pricing-footer">
-                            <a href="#" class="main-button">Purchase Now</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- ***** Pricing Item End ***** -->
-
-                <!-- ***** Pricing Item Start ***** -->
-                <div class="col-lg-4 col-md-6 col-sm-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.6s">
-                    <div class="pricing-item">
-                        <div class="pricing-header">
-                            <h3 class="pricing-title">Advanced</h3>
-                        </div>
-                        <div class="pricing-body">
-                            <div class="price-wrapper">
-                                <span class="currency">$</span>
-                                <span class="price">42.00</span>
-                                <span class="period">monthly</span>
-                            </div>
-                            <ul class="list">
-                                <li class="active">250 GB space</li>
-                                <li class="active">5000 GB transfer</li>
-                                <li class="active">Pro Design Panel</li>
-                                <li class="active">15-minute support</li>
-                                <li class="active">Unlimited Emails</li>
-                                <li class="active">24/7 Security</li>
-                            </ul>
-                        </div>
-                        <div class="pricing-footer">
-                            <a href="#" class="main-button">Purchase Now</a>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    endwhile;
+                ?>
                 <!-- ***** Pricing Item End ***** -->
             </div>
         </div>
@@ -388,30 +322,39 @@ get_header();
         <div class="content">
             <div class="container">
                 <div class="row">
+                    <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "counter-section")) );
+                        $loop = new WP_Query( $args );
+                        global $post;
+                        while ( $loop->have_posts() ) : $loop->the_post();
+                            $meta = get_post_meta($post->ID);
+                    ?>
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="count-item decoration-bottom">
-                            <strong>126</strong>
+                            <strong><?php echo $meta['project-counter'][0]; ?></strong>
                             <span>Projects</span>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="count-item decoration-top">
-                            <strong>63</strong>
+                            <strong><?php echo $meta['happy-clients-counter'][0]; ?></strong>
                             <span>Happy Clients</span>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="count-item decoration-bottom">
-                            <strong>18</strong>
+                            <strong><?php echo $meta['award-wins-counter'][0]; ?></strong>
                             <span>Awards Wins</span>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="count-item">
-                            <strong>27</strong>
+                            <strong><?php echo $meta['countries-counter'][0]; ?></strong>
                             <span>Countries</span>
                         </div>
                     </div>
+                    <?php
+                        endwhile;
+                    ?>
                 </div>
             </div>
         </div>
@@ -423,68 +366,49 @@ get_header();
         <div class="container">
             <!-- ***** Section Title Start ***** -->
             <div class="row">
+                <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "blog-entries-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                ?>
                 <div class="col-lg-12">
                     <div class="center-heading">
-                        <h2 class="section-title">Blog Entries</h2>
+                        <?php echo $post->post_content; ?> 
                     </div>
                 </div>
-                <div class="offset-lg-3 col-lg-6">
-                    <div class="center-text">
-                        <p>Integer molestie aliquam gravida. Nullam nec arcu finibus, imperdiet nulla vitae, placerat nibh. Cras maximus venenatis molestie.</p>
-                    </div>
-                </div>
+                <?php
+                    endwhile;
+                ?>
             </div>
             <!-- ***** Section Title End ***** -->
 
             <div class="row">
+                <?php $args = array('post_type' => 'blog', 'posts_per_page' => 10, 'order' => 'ASC', 'post_status' => 'publish');
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                    $meta = get_post_meta($post->ID);
+                ?>
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="blog-post-thumb">
                         <div class="img">
-                            <img src="<?php echo ASSETS_URL; ?>/images/blog-item-01.png" alt="">
+                             <?php // the_post_thumbnail(); ?>
+                            <img alt="" src=" <?php echo get_the_post_thumbnail_url(); ?>" />
                         </div>
                         <div class="blog-content">
                             <h3>
-                                <a href="#">Vivamus ac vehicula dui</a>
+                                <a href="<?php echo $meta['custom_blog_button_url'][0]; ?>" target="blank"><?php the_title(); ?></a>
                             </h3>
                             <div class="text">
-                               Cras aliquet ligula dui, vitae fermentum velit tincidunt id. Praesent eu finibus nunc. Nulla in sagittis eros. Aliquam egestas augue.
+                                <?php echo $post->post_excerpt; ?> 
                             </div>
-                            <a href="#" class="main-button">Read More</a>
+                            <a href="<?php echo $meta['custom_blog_button_url'][0]; ?>" target="blank" class="main-button">Read More</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="blog-post-thumb">
-                        <div class="img">
-                            <img src="<?php echo ASSETS_URL; ?>/images/blog-item-02.png" alt="">
-                        </div>
-                        <div class="blog-content">
-                            <h3>
-                                <a href="#">Phasellus convallis augue</a>
-                            </h3>
-                            <div class="text">
-                                Aliquam commodo ornare nisl, et scelerisque nisl dignissim ac. Vestibulum finibus urna ut velit venenatis, vel ultrices sapien mattis.
-                            </div>
-                            <a href="#" class="main-button">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="blog-post-thumb">
-                        <div class="img">
-                            <img src="<?php echo ASSETS_URL; ?>/images/blog-item-03.png" alt="">
-                        </div>
-                        <div class="blog-content">
-                            <h3>
-                                <a href="#">Nam gravida purus non</a>
-                            </h3>
-                            <div class="text">
-                                Maecenas eu erat vitae dui convallis consequat vel gravida nulla. Vestibulum finibus euismod odio, ut tempus enim varius eu.
-                            </div>
-                            <a href="#" class="main-button">Read More</a>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    endwhile;
+                ?>
             </div>
         </div>
     </section>
@@ -495,27 +419,35 @@ get_header();
         <div class="container">
             <!-- ***** Section Title Start ***** -->
             <div class="row">
+                <?php $args = array('post_type' => 'section', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "contact-us-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                ?>
                 <div class="col-lg-12">
                     <div class="center-heading">
-                        <h2 class="section-title">Talk To Us</h2>
+                        <?php echo $post->post_content; ?> 
                     </div>
                 </div>
-                <div class="offset-lg-3 col-lg-6">
-                    <div class="center-text">
-                        <p>Maecenas pellentesque ante faucibus lectus vulputate sollicitudin. Cras feugiat hendrerit semper.</p>
-                    </div>
-                </div>
+                <?php
+                    endwhile;
+                ?>
             </div>
             <!-- ***** Section Title End ***** -->
 
             <div class="row">
+                <?php $args = array('post_type' => 'card', 'posts_per_page' => 1, 'order' => 'ASC', 'post_status' => 'publish', 'tax_query' => array(array('taxonomy' => 'section_type', 'field' => 'slug', 'terms' => "contact-us-section")) );
+                    $loop = new WP_Query( $args );
+                    global $post;
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                    $meta = get_post_meta($post->ID);
+                ?>
                 <!-- ***** Contact Text Start ***** -->
+                
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <h5 class="margin-bottom-30">Keep in touch</h5>
+                    <h5 class="margin-bottom-30"><?php echo $meta['custom_card_title'][0]; ?></h5>
                     <div class="contact-text">
-                        <p>110-220 Quisque diam odio, maximus ac consectetur eu, 10260
-                        <br>auctor non lorem</p>
-                        <p>You are NOT allowed to re-distribute Softy Pinko template on any template collection websites. Thank you.</p>
+                         <?php echo $meta['custom_card_description'][0]; ?>
                     </div>
                 </div>
                 <!-- ***** Contact Text End ***** -->
@@ -523,7 +455,7 @@ get_header();
                 <!-- ***** Contact Form Start ***** -->
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="contact-form">
-                        <form id="contact" action="" method="get">
+                        <form id="contact" action="<?php echo $meta['custom_card_button_url'][0]; ?>" method="get">
                           <div class="row">
                             <div class="col-lg-6 col-md-12 col-sm-12">
                               <fieldset>
@@ -542,7 +474,7 @@ get_header();
                             </div>
                             <div class="col-lg-12">
                               <fieldset>
-                                <button type="submit" id="form-submit" class="main-button">Send Message</button>
+                                <button type="submit" id="form-submit" class="main-button"><?php echo $meta['custom_card_button_title'][0]; ?></button>
                               </fieldset>
                             </div>
                           </div>
@@ -550,6 +482,9 @@ get_header();
                     </div>
                 </div>
                 <!-- ***** Contact Form End ***** -->
+                <?php
+                    endwhile;
+                ?>
             </div>
         </div>
     </section>
